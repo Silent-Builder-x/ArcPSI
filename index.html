@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcPSI | 隐私集求交协议演示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+
+        .mono { font-family: 'JetBrains+Mono', monospace; }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        @keyframes scan-horizontal {
+            0% { left: -10%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { left: 110%; opacity: 0; }
+        }
+
+        .scanner-bar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, transparent, #3b82f6, transparent);
+            box-shadow: 0 0 15px #3b82f6;
+            animation: scan-horizontal 3s infinite linear;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            filter: grayscale(0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-12 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-5xl flex justify-between items-center mb-16">
+        <div class="flex items-center gap-4">
+            <div class="bg-blue-600 p-2.5 rounded-2xl shadow-xl shadow-blue-500/20">
+                <i class="fas fa-users-viewfinder text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black tracking-tighter">ArcPSI <span class="text-blue-500 font-normal mono text-sm ml-1">v1.0</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">Confidential Contact Discovery</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-end text-right">
+            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Arcium Infrastructure</span>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-xs font-bold text-slate-300">Devnet Active</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+        
+        <!-- Left: Input Controls -->
+        <div class="lg:col-span-5 space-y-6">
+            <div class="glass-panel rounded-[2.5rem] p-8 space-y-6 shadow-2xl border-t-4 border-t-blue-500">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fas fa-address-book text-blue-500"></i> Local Address Book
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800 focus-within:border-blue-500 transition">
+                        <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs text-slate-500 font-bold">1</div>
+                        <input type="text" id="contact1" value="Alice" class="bg-transparent text-sm outline-none w-full text-slate-200">
+                        <i class="fas fa-lock text-slate-700"></i>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800 focus-within:border-blue-500 transition">
+                        <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs text-slate-500 font-bold">2</div>
+                        <input type="text" id="contact2" value="Bob" class="bg-transparent text-sm outline-none w-full text-slate-200">
+                        <i class="fas fa-lock text-slate-700"></i>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800 focus-within:border-blue-500 transition">
+                        <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs text-slate-500 font-bold">3</div>
+                        <input type="text" id="contact3" value="Charlie" class="bg-transparent text-sm outline-none w-full text-slate-200">
+                        <i class="fas fa-lock text-slate-700"></i>
+                    </div>
+
+                    <button id="submitBtn" class="w-full bg-white text-slate-950 font-black py-5 rounded-2xl hover:bg-blue-50 transition active:scale-[0.95] flex items-center justify-center gap-3 mt-4 shadow-xl">
+                        <i class="fas fa-fingerprint" id="btnIcon"></i> <span id="btnText">FIND FRIENDS PRIVATELY</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-blue-900/10 border border-blue-500/20 p-6 rounded-3xl">
+                <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2">Privacy Assurance</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed italic">
+                    "Arcium nodes perform matching on encrypted hashes. Only common contacts are revealed to the client; unmatched entries remain completely invisible to the server."
+                </p>
+            </div>
+        </div>
+
+        <!-- Right: Visualization Center -->
+        <div class="lg:col-span-7 flex flex-col">
+            <div id="displayPanel" class="glass-panel rounded-[2.5rem] p-10 flex-1 flex flex-col relative overflow-hidden min-h-[500px]">
+                
+                <!-- Idle State -->
+                <div id="idleState" class="flex-1 flex flex-col items-center justify-center text-center space-y-8 z-10">
+                    <div class="w-48 h-48 rounded-full border border-slate-800 flex items-center justify-center relative">
+                        <i class="fas fa-magnifying-glass text-slate-700 text-5xl animate-pulse"></i>
+                        <div class="absolute inset-0 rounded-full border border-blue-500/5 blur-xl"></div>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-slate-300 uppercase tracking-widest">Discovery Engine Ready</h3>
+                        <p class="text-xs text-slate-600 max-w-xs mx-auto">提交加密通讯录分片以开启同态比对周期。系统预置了一个匹配对象以供演示。</p>
+                    </div>
+                </div>
+
+                <!-- Computing State -->
+                <div id="computingState" class="hidden flex-1 flex flex-col items-center justify-center space-y-12 z-10 relative">
+                    <div class="scanner-bar"></div>
+                    <div class="flex items-center gap-8">
+                        <div class="w-16 h-16 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse text-white text-3xl">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Comparing</span>
+                            <div class="h-[2px] w-32 bg-gradient-to-r from-blue-600 via-white to-slate-800"></div>
+                            <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest mono">Encrypted Hashes</span>
+                        </div>
+                        <div class="w-16 h-16 bg-slate-800 rounded-3xl border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl">
+                            <i class="fas fa-database"></i>
+                        </div>
+                    </div>
+                    <div class="text-center space-y-4">
+                        <h3 class="font-black text-blue-400 uppercase tracking-[0.3em] text-sm animate-pulse">正在进行同态集合比对...</h3>
+                        <div class="bg-slate-950/80 px-8 py-3 rounded-full border border-slate-800 shadow-inner">
+                            <p class="text-[10px] font-mono text-blue-300 tracking-wider" id="statusLog">Lifting input to ArcisType...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result State -->
+                <div id="resultState" class="hidden flex-1 flex flex-col z-10 animate-in fade-in slide-in-from-bottom duration-500">
+                    <div class="flex justify-between items-start mb-10">
+                        <h3 class="text-[10px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-check-circle"></i> Discovery Finalized
+                        </h3>
+                        <div class="text-right">
+                            <p class="text-[9px] text-slate-600 mono">MXE: BR1meYP2...ggZ2</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-5">
+                        <!-- Match Result Card 1 -->
+                        <div class="bg-green-500/10 p-5 rounded-2xl border border-green-500/20 flex justify-between items-center group hover:bg-green-500/15 transition">
+                            <div class="flex items-center gap-5">
+                                <div class="w-12 h-12 rounded-2xl bg-green-500 flex items-center justify-center text-white shadow-lg">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-white" id="matchName">--</p>
+                                    <p class="text-[9px] text-green-500 uppercase font-black tracking-widest mt-0.5">Found in Registry</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400 bg-green-950 px-2.5 py-1 rounded-md">MATCH_TRUE</span>
+                        </div>
+
+                        <!-- Match Result Card 2 (Unmatched) -->
+                        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex justify-between items-center opacity-40 grayscale group">
+                            <div class="flex items-center gap-5">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-500">
+                                    <i class="fas fa-user-lock"></i>
+                                </div>
+                                <p class="text-xs font-bold text-slate-500 italic">Encrypted Entry (No Match)</p>
+                            </div>
+                            <span class="text-[10px] font-mono text-slate-700">SHIELDED</span>
+                        </div>
+                        
+                        <!-- Match Result Card 3 (Unmatched) -->
+                        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex justify-between items-center opacity-40 grayscale group">
+                            <div class="flex items-center gap-5">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-500">
+                                    <i class="fas fa-user-lock"></i>
+                                </div>
+                                <p class="text-xs font-bold text-slate-500 italic">Encrypted Entry (No Match)</p>
+                            </div>
+                            <span class="text-[10px] font-mono text-slate-700">SHIELDED</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="resetDemo()" class="mt-auto mx-auto text-[10px] text-slate-500 hover:text-white transition uppercase tracking-[0.4em] font-black border-b border-transparent hover:border-white pb-1">
+                        Return to Monitoring Dashboard
+                    </button>
+                </div>
+
+                <!-- Footer Logs -->
+                <div class="mt-auto pt-8 border-t border-slate-800/50">
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Network Telemetry</span>
+                        <span class="text-[9px] mono text-slate-600">MXE Program: 4g2oDf...xGZA</span>
+                    </div>
+                    <div id="liveLogs" class="space-y-2 h-24 overflow-y-auto custom-scrollbar mono text-[10px] px-1 text-slate-600">
+                        <!-- Logs inject here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-16 text-slate-700 text-[10px] uppercase tracking-[0.5em] font-black italic">
+        ArcPSI Confidential Infrastructure &copy; 2026 | Powered by Arcium
+    </footer>
+
+    <script>
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        
+        const idleState = document.getElementById('idleState');
+        const computingState = document.getElementById('computingState');
+        const resultState = document.getElementById('resultState');
+        const statusLog = document.getElementById('statusLog');
+        const liveLogs = document.getElementById('liveLogs');
+
+        const mxePhases = [
+            "Generating ephemeral x25519 session keys...",
+            "Sharding address book into encrypted fragments...",
+            "Lifting user_hashes to SharedEncryptedStruct...",
+            "Initiating O(N*M) homomorphic comparison...",
+            "Iterating through encrypted GlobalRegistry...",
+            "Applying constant-time multiplexer for match flags...",
+            "Committing intersection proof to Solana Devnet..."
+        ];
+
+        function addLiveLog(text, color = 'text-slate-600') {
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            const entry = document.createElement('div');
+            entry.className = `${color} border-l-2 border-transparent pl-2 hover:border-slate-800 transition-all`;
+            entry.innerHTML = `<span class="text-slate-800 mr-2">[${time}]</span> ${text}`;
+            liveLogs.prepend(entry);
+        }
+
+        submitBtn.addEventListener('click', () => {
+            const name1 = document.getElementById('contact1').value;
+            if (!name1) return;
+
+            // Lock UI
+            submitBtn.disabled = true;
+            btnText.innerText = "COMPUTING PSI...";
+            btnIcon.className = "fas fa-spinner fa-spin";
+            
+            idleState.classList.add('hidden');
+            resultState.classList.add('hidden');
+            computingState.classList.remove('hidden');
+
+            addLiveLog(`Initiating Confidential Discovery for 3 contact hashes...`, 'text-blue-400 font-bold');
+
+            let phase = 0;
+            const logInterval = setInterval(() => {
+                statusLog.innerText = mxePhases[phase];
+                addLiveLog(`[MXE] ${mxePhases[phase]}`);
+                phase++;
+                if (phase >= mxePhases.length) clearInterval(logInterval);
+            }, 750);
+
+            setTimeout(() => {
+                computingState.classList.add('hidden');
+                resultState.classList.remove('hidden');
+                document.getElementById('matchName').innerText = name1;
+
+                addLiveLog(`🎉 [SUCCESS] Set Intersection Computed. Match identified for Entry #1.`, 'text-green-500 font-black');
+                
+                submitBtn.disabled = false;
+                btnText.innerText = "FIND FRIENDS PRIVATELY";
+                btnIcon.className = "fas fa-fingerprint";
+            }, 6000);
+        });
+
+        function resetDemo() {
+            resultState.classList.add('hidden');
+            idleState.classList.remove('hidden');
+            addLiveLog("System returned to standby mode.");
+        }
+
+        // Init logs
+        addLiveLog("ArcPSI Confidential Engine v1.0 Initialized.");
+        addLiveLog("Connected to Arcium MXE Cluster 456.");
+        addLiveLog("GlobalRegistry sync: Complete.");
+    </script>
+</body>
+</html>
