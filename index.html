@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
@@ -107,7 +107,7 @@
             <div class="bg-blue-900/10 border border-blue-500/20 p-6 rounded-3xl">
                 <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2">Privacy Assurance</h4>
                 <p class="text-[11px] text-slate-400 leading-relaxed italic">
-                    "Arcium nodes perform matching on encrypted hashes. Only common contacts are revealed to the client; unmatched entries remain completely invisible to the server."
+                    "Arcium nodes perform matching on secret-shared hashes. Only common contacts are revealed to the client; unmatched entries remain completely invisible to the server."
                 </p>
             </div>
         </div>
@@ -145,7 +145,7 @@
                         </div>
                     </div>
                     <div class="text-center space-y-4">
-                        <h3 class="font-black text-blue-400 uppercase tracking-[0.3em] text-sm animate-pulse">正在进行同态集合比对...</h3>
+                        <h3 class="font-black text-blue-400 uppercase tracking-[0.3em] text-sm animate-pulse">正在进行 MPC 集合比对...</h3>
                         <div class="bg-slate-950/80 px-8 py-3 rounded-full border border-slate-800 shadow-inner">
                             <p class="text-[10px] font-mono text-blue-300 tracking-wider" id="statusLog">Lifting input to ArcisType...</p>
                         </div>
@@ -239,7 +239,7 @@
             "Generating ephemeral x25519 session keys...",
             "Sharding address book into encrypted fragments...",
             "Lifting user_hashes to SharedEncryptedStruct...",
-            "Initiating O(N*M) homomorphic comparison...",
+            "Initiating O(N*M) oblivious comparison...",
             "Iterating through encrypted GlobalRegistry...",
             "Applying constant-time multiplexer for match flags...",
             "Committing intersection proof to Solana Devnet..."
@@ -259,7 +259,7 @@
 
             // Lock UI
             submitBtn.disabled = true;
-            btnText.innerText = "COMPUTING PSI...";
+            btnText.innerText = "COMPUTING MPC PSI...";
             btnIcon.className = "fas fa-spinner fa-spin";
             
             idleState.classList.add('hidden');
