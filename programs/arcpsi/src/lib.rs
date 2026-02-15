@@ -14,18 +14,18 @@ pub mod arcpsi {
         Ok(())
     }
 
-    /// [新增] 初始化全局注册表
+    /// [New] Initialize the global registry
     pub fn init_registry(ctx: Context<InitRegistry>) -> Result<()> {
         let registry = &mut ctx.accounts.registry;
         registry.authority = ctx.accounts.payer.key();
         registry.user_count = 0;
-        // 初始化为空数组
+        // Initialize as an empty array
         registry.encrypted_users = [[0u8; 32]; 4];
         Ok(())
     }
 
-    /// [新增] 注册用户 (模拟)
-    /// 将用户哈希添加到全局池中，用于被他人发现
+    /// [New] Register a user (simulation)
+    /// Add the user's hash to the global pool to be discovered by others
     pub fn register_user(
         ctx: Context<RegisterUser>, 
         encrypted_hash: [u8; 32]
@@ -41,31 +41,31 @@ pub mod arcpsi {
         Ok(())
     }
 
-    /// [核心] 发起隐私求交
-    /// 传入：用户本地的加密联系人列表
-    /// 上下文：链上的全局加密用户列表
+    /// [Core] Initiate private set intersection
+    /// Input: User's local encrypted contact list
+    /// Context: Global encrypted user list on-chain
     pub fn discover_contacts(
         ctx: Context<DiscoverContacts>,
         computation_offset: u64,
-        user_contacts: [[u8; 32]; 4], // 用户想要查询的 4 个号码
+        user_contacts: [[u8; 32]; 4], // 4 numbers the user wants to query
         pubkey: [u8; 32],
         nonce: u128,
     ) -> Result<()> {
         let registry = &ctx.accounts.registry;
         ctx.accounts.sign_pda_account.bump = ctx.bumps.sign_pda_account;
         
-        // 构建 MPC 参数: UserContacts + GlobalRegistry
+        // Construct MPC parameters: UserContacts + GlobalRegistry
         let mut builder = ArgBuilder::new()
             .x25519_pubkey(pubkey)
             .plaintext_u128(nonce);
 
-        // 1. 注入用户查询数据 (UserContacts)
+        // 1. Inject user query data (UserContacts)
         for contact in &user_contacts {
             builder = builder.encrypted_u64(*contact);
         }
 
-        // 2. 注入全局注册表数据 (GlobalRegistry)
-        // Arcium 节点将读取这部分链上状态作为对比源
+        // 2. Inject global registry data (GlobalRegistry)
+        // Arcium nodes will read this on-chain state as the comparison source
         for user in &registry.encrypted_users {
             builder = builder.encrypted_u64(*user);
         }
@@ -95,8 +95,8 @@ pub mod arcpsi {
             Err(_) => return Err(ErrorCode::AbortedComputation.into()),
         };
 
-        // 解析结果: 布尔掩码 [1, 0, 1, 0]
-        // 这里只是发出事件，前端解密后会知道哪几个匹配了
+        // Parse results: Boolean mask [1, 0, 1, 0]
+        // Here, only an event is emitted. The frontend will decrypt to know which ones matched.
         let m0 = u64::from_le_bytes(o.ciphertexts[0][0..8].try_into().unwrap());
         let m1 = u64::from_le_bytes(o.ciphertexts[1][0..8].try_into().unwrap());
         let m2 = u64::from_le_bytes(o.ciphertexts[2][0..8].try_into().unwrap());
@@ -140,7 +140,7 @@ pub struct RegisterUser<'info> {
 pub struct GlobalState {
     pub authority: Pubkey,
     pub user_count: u8,
-    pub encrypted_users: [[u8; 32]; 4], // 全局用户池
+    pub encrypted_users: [[u8; 32]; 4], // Global user pool
 }
 
 #[queue_computation_accounts("perform_psi", payer)]
@@ -149,7 +149,7 @@ pub struct GlobalState {
 pub struct DiscoverContacts<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
-    pub registry: Account<'info, GlobalState>, // 读取源
+    pub registry: Account<'info, GlobalState>, // Read source
     
     #[account(init_if_needed, space = 9, payer = payer, seeds = [&SIGN_PDA_SEED], bump, address = derive_sign_pda!())]
     pub sign_pda_account: Account<'info, ArciumSignerAccount>,
