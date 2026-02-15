@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-arcpsi = "BXFA1H14qgyrbEBrdxFbpgXgSSRhNeWKA1G7RhJrDFuZ"
+test = "C5fjLrDxAAEP4wyqRCaodKARb4KMGgQQnXPpzdWvzTjw"
 
 [registry]
 url = "https://api.apr.dev"

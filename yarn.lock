@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@arcium-hq/client@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@arcium-hq/client/-/client-0.8.0.tgz#08b38f58b6a27850128e3f4dcdad448dc6f506c9"
-  integrity sha512-gHxi/NVySMUDUm8AdLu0/DAVftJx5veP6imHsuqDRtxzl9TebLPRlm9xcXnR/siSuFmwx0dKZ7fDRFMNmqaxKg==
+"@arcium-hq/client@0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@arcium-hq/client/-/client-0.8.3.tgz#ae329403c1ad00f43711a8420b9a33b2a4edca98"
+  integrity sha512-QnxE2YX7YFsoGM3wGdYRwoZabIKzSpwz6YdFb4htRApiruwZxeXgnGH6vlUi62lovXn4fjdLRO1Y6Ohps0nnWg==
   dependencies:
     "@coral-xyz/anchor" "0.32.1"
     "@noble/curves" "^1.9.5"
@@ -149,9 +149,9 @@
   integrity sha512-Z61JK7DKDtdKTWwLeElSEBcWGRLY8g95ic5FoQqI9CMx0ns/Ghep3B4DfcEimiKMvtamNVULVNKEsiwV3aQmXw==
 
 "@types/node@*":
-  version "25.2.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.2.2.tgz#0ddfe326c326afcb3422d32bfe5eb2938e1cb5db"
-  integrity sha512-BkmoP5/FhRYek5izySdkOneRyXYN35I860MFAGupTdebyE66uZaR+bXLHq8k4DirE5DwQi3NuhvRU1jqTVwUrQ==
+  version "25.2.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.2.3.tgz#9c18245be768bdb4ce631566c7da303a5c99a7f8"
+  integrity sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ==
   dependencies:
     undici-types "~7.16.0"
 
